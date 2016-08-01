@@ -1,6 +1,7 @@
 'use strict';
 
 let _ = require('lodash');
+
 let {loadAllItems, loadPromotions} = require('../spec/fixtures');
 
 function printReceipt(tags) {
@@ -13,6 +14,7 @@ function printReceipt(tags) {
   let totalPrices = calculateTotalPrices(promotedItems);
   let receipt = buildReceipt(promotedItems, totalPrices);
   let receiptString = buildReceiptString(receipt);
+  require('fs').writeFileSync('test.txt',receiptString);
   console.log(receiptString);
 }
 
@@ -79,8 +81,23 @@ function buildReceipt(promotedItems, {totalPayPrice, totalSaved}) {
 }
 
 function buildReceiptString(receipt) {
-  // TODO
+  let list = _.map(receipt.receiptItems,list => {
+    return `名称：${list.name}，\
+数量：${list.count}${list.unit}，\
+单价：${list.price.toFixed(2)}(元)，\
+小计：${list.payPrice.toFixed(2)}(元)`
+  }).join('\n');
+
+  return `***<没钱赚商店>收据***
+${list}
+----------------------
+总计：${receipt.totalPayPrice.toFixed(2)}(元)
+节省：${receipt.totalSaved.toFixed(2)}(元)
+**********************`;
+
 }
+
+
 
 module.exports = {
   formatTags,

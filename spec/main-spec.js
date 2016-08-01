@@ -224,7 +224,7 @@ describe('pos', () => {
 总计：58.50(元)
 节省：7.50(元)
 **********************`;
-
+    require('fs').writeFileSync('test',expectText);
     expect(console.log).toHaveBeenCalledWith(expectText);
   });
 });
